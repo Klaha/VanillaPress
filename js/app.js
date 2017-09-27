@@ -15,6 +15,7 @@ var vanillaPress = {
     // Add any functions here you want
     // to run to start the application
     removeOldStuff();
+    setLocalStorage();
     populatePosts();
     addTitleListener();
     addPostListeners();
@@ -25,6 +26,23 @@ var vanillaPress = {
 vanillaPress.init();
 
 // Add your custom code starting here:
+
+function setLocalStorage() {
+  for (var i = 0; i < posts.length; i++) {
+    localStorage.setItem( 'post_' + i, JSON.stringify( posts[i] ) );
+  }
+}
+
+function getAllLocalStoragePosts() {
+  var postsFromLocalStorage = [];
+
+  for (var i = 0; i < posts.length; i++) {
+    var post = localStorage.getItem('post_' + i);
+    postsFromLocalStorage.push(JSON.parse( post ) );
+  }
+
+  return postsFromLocalStorage;
+}
 
 function getAllPosts() {
   return document.querySelectorAll('.post');
@@ -71,6 +89,7 @@ function appendToPrimary( elemento ) {
 }
 
 function populatePosts() {
+  var posts = getAllLocalStoragePosts();
   for (var i = 0; i < posts.length; i++) {
 
     var container = document.createElement( 'div' );
@@ -98,7 +117,6 @@ function populatePosts() {
 
   var postz = getAllPosts();
   postz[ postz.length -1 ].style.borderBottom = 'none';
-
 }
 
 function getDetailedPost() {
@@ -108,7 +126,6 @@ function getDetailedPost() {
   removePostListeners();
   removePosts();
   appendToPrimary( selectedPost );
-
 }
 
 function goBack() {
